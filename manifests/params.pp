@@ -1,6 +1,6 @@
 
 
-class a2c:: params(){
+class a2c::params(){
   $binding = 'a2c-qa.progresso.net'
   $iisaccount = ''
   $iispassword = ''
