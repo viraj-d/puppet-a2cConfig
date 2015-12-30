@@ -15,12 +15,19 @@ class a2c (
  
    
     # copy certificate to target location
-    include a2c::installCert
+    include a2c::installcert
     
     # install certificate on target
     include a2c::storessl
 
     # create application pool and a2c-website
-    include a2c::iis
+    #include a2c::iis
+
+    include a2c::install
+
+    class{'a2c::iis':
+    require => Class['a2c::install']
+
+  }    
          
 }

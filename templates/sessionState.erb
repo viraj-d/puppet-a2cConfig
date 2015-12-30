@@ -1,0 +1,12 @@
+<sessionState mode="Custom" customProvider="RedisSessionState" timeout="20">
+  <providers>
+    <add name="RedisSessionState"
+            type = "Microsoft.Web.Redis.RedisSessionStateProvider" 
+            host = "<%= @redisaddress %>" 
+            port = "<%= @redisport %>"
+            throwOnError = "true" 
+            databaseId = "<%= @redisdbid %>" 
+            applicationName = "A2C"
+            ssl = "<%= @redisssl %>" />
+  </providers>
+</sessionState>

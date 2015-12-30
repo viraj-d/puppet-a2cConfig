@@ -1,0 +1,4 @@
+Add-PSSnapin WebAdministration -ErrorAction SilentlyContinue
+Import-Module WebAdministration -ErrorAction SilentlyContinue
+
+Set-WebBinding -Name "<%=@sitename%>" -BindingInformation "*:443:<%=@binding%>" -Property "sslFlags" -Value "2"

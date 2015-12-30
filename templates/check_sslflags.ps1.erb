@@ -1,0 +1,4 @@
+Add-PSSnapin WebAdministration -ErrorAction SilentlyContinue
+Import-Module WebAdministration -ErrorAction SilentlyContinue
+
+if ((Get-WebBinding -Name "<%=@sitename%>" -Protocol "https" -Port "443" -HostHeader "<%= @binding %>").sslFlags -eq 2) {exit 1}
