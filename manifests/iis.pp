@@ -1,15 +1,13 @@
 class a2c::iis() inherits a2c {
  
-    include iis_service
-   
-    $bindings = ['http/*:80:',"https/*:443:${a2c::binding}"]
+     $bindings = ['http/*:80:',"https/*:443:${a2c::binding}"]
 
  
- if $kernelmajversion == '6.1' {
-    $cpuaction = 'NoAction'
-  } else {
-    $cpuaction = 'Throttle'
-  }
+    if $kernelmajversion == '6.1' {
+         $cpuaction = 'NoAction'
+    } else {
+         $cpuaction = 'Throttle'
+   }
 
 #create the app pool
   iis_apppool {'A2CCore':
@@ -58,7 +56,7 @@ iis_site {'A2CCore':
           serverautostart => true, 
           applicationdefaults_applicationpool => 'A2CCore',
           virtualdirectorydefaults_physicalpath => $a2c::sitepath,
-    	  bindings                              => $bindings,
+    	      bindings                              => $bindings,
           require                               => Iis_apppool['A2CCore'] 
        }
 
@@ -70,24 +68,23 @@ iis_app {'A2CCore/':
     ensure => present
   }
 
-
 iis_vdir {'A2CCore/':
     ensure       => present,
     iis_app      => "A2CCore/",
     physicalpath => $a2c::sitepath
 }
 
-
   # set sslFlags for https bindings
-    a2c::sslflags {'A2CCoreSSL': 
+ a2c::sslflags {'A2CCoreSSL': 
       binding => $binding,
       sitename => 'A2CCore'
-    }
+ }
 
  #add entry to hosts file
   host {$a2c::binding:
     ip => '127.0.0.1'
   }
 
-include a2c::config
+   include a2c::config
+ }
 
