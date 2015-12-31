@@ -1,5 +1,7 @@
 class a2c::iis() inherits a2c {
- 
+     
+      include iis_service  
+       
      $bindings = ['http/*:80:',"https/*:443:${a2c::binding}"]
 
  
