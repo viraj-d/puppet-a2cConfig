@@ -1,4 +1,4 @@
-class a2c::iis() inherits a2c {
+class a2c::iistest() inherits a2c {
      
       include iis_service  
        
