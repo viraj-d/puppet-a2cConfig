@@ -1,7 +1,5 @@
 class a2c::iistest() inherits a2c {
      
-      include iis_service  
-       
      $bindings = ['http/*:80:',"https/*:443:${a2c::binding}"]
 
  
@@ -86,7 +84,7 @@ iis_vdir {'A2CCore/':
   host {$a2c::binding:
     ip => '127.0.0.1'
   }
-
+  
    include a2c::config
  }
 
