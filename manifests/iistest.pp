@@ -1,15 +1,15 @@
-class a2c::iistest() inherits a2c {
+class a2c::config() inherits a2c {
      
-     $bindings = ['http/*:80:',"https/*:443:${a2c::binding}"]
+    # $bindings = ["http/*:80:${a2c::binding}","https/*:443:${a2c::binding}"]
+    $bindings = ['http/*:80:',"https/*:443:${a2c::binding}"]
 
- 
-    if $kernelmajversion == '6.1' {
-         $cpuaction = 'NoAction'
-    } else {
-         $cpuaction = 'Throttle'
-   }
+  if $kernelmajversion == '6.1' {
+    $cpuaction = 'NoAction'
+  } else {
+    $cpuaction = 'Throttle'
+  }
 
-#create the app pool
+  # create the app pool
   iis_apppool {'A2CCore':
     ensure                                   => present,
     managedpipelinemode                      => 'Integrated',
@@ -49,42 +49,72 @@ class a2c::iistest() inherits a2c {
     #doStaticCompression                      => true
   }
 
-
-iis_site {'A2CCore':
-          ensure => present,
-          id     => 20,
-          serverautostart => true, 
-          applicationdefaults_applicationpool => 'A2CCore',
-          virtualdirectorydefaults_physicalpath => $a2c::sitepath,
-    	      bindings                              => $bindings,
-          require                               => Iis_apppool['A2CCore'] 
-       }
-
-iis_site {'Default Web Site':
-      ensure => absent,
+  iis_site {'A2CCore':
+    ensure                                => present,
+    id                                    => 20,
+    serverautostart                       => true,
+    applicationdefaults_applicationpool   => 'A2CCore',
+    virtualdirectorydefaults_physicalpath => $a2c::sitepath,
+    bindings                              => $bindings,
+    require                               => Iis_apppool['A2CCore']
   }
 
-iis_app {'A2CCore/':
+  # remove default web site from iis
+  iis_site {'Default Web Site':
+      ensure => absent,
+    }
+
+  iis_app {'A2CCore/':
     ensure => present
   }
 
-iis_vdir {'A2CCore/':
+  iis_vdir {'A2CCore/':
     ensure       => present,
     iis_app      => "A2CCore/",
     physicalpath => $a2c::sitepath
-}
-
+  }
+  
   # set sslFlags for https bindings
- a2c::sslflags {'A2CCoreSSL': 
+  a2c::sslflags {'A2CCoreSSL': 
       binding => $binding,
       sitename => 'A2CCore'
- }
+    }
 
  #add entry to hosts file
   host {$a2c::binding:
     ip => '127.0.0.1'
   }
-  
-   include a2c::config
- }
 
+  # update config files
+  $dbserver = $a2c::dbserver
+
+  file{"${a2c::sitepath}\\config\\authentication.config":
+    ensure => present,
+   content => template('a2c/authentication.config.erb')
+  }
+  
+  #file{"${a2c::sitepath}\\config\\connectionstrings.config":
+  #  ensure => present,
+  # content => template('a2c/connectionstrings.erb')
+  #}
+
+  # file{"${a2c::sitepath}\\config\\sessionState.config":
+  #ensure => present,
+  #  content => template('a2c/sessionState.erb')
+  #}
+  
+   file{"${a2c::sitepath}\\config\\A2C.Configuration.CommonSetting.config":
+  ensure => present,
+    content => template('a2c/A2C.Configuration.CommonSetting.erb')
+  }
+  
+  #  file{"${a2c::a2cservicepath}\\config\\connectionstrings.config":
+  #  ensure => present,
+  #  content => template('a2c/service_connectionstrings.erb')
+  #}
+  
+    file{"${a2c::a2cservicepath}\\config\\A2C.Configuration.CommonSetting.config":
+    ensure => present,
+    content => template('a2c/A2C.Configuration.CommonSetting.erb')
+  }
+}
