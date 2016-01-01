@@ -1,7 +1,7 @@
 
 
 
-class a2c::config inherits a2c{
+class a2c::config1 inherits a2c{
 
  # update authenticatiom config file
   file{"${a2c::sitepath}\\config\\authentication.config":
