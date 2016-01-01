@@ -25,8 +25,8 @@ class a2c (
  
     include a2c::install
 
-    class{'a2c::iistest':
+    class{'a2c::config':
     require => Class['a2c::install']
-       }    
+     }    
          
 }
