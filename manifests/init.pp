@@ -21,13 +21,12 @@ class a2c (
     include a2c::storessl
 
     # create application pool and a2c-website
-     include a2c::iistest
+    #include a2c::iistest
  
-    # include a2c::install
+    include a2c::install
 
-    #class{'a2c::iis':
-    #require => Class['a2c::install']
-
-  #}    
+    class{'a2c::iis':
+    require => Class['a2c::install']
+        }    
          
 }
