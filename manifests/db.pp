@@ -1,6 +1,6 @@
 
 
-class a2c:db inherits a2c {
+class a2c::db inherits a2c {
 
  file {'DBUpdates' : 
          ensure => directory,
